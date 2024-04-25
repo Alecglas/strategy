@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import io from 'socket.io-client'
 
-const socket = io('http://localhost:5000')
+const socket = io('http://136.34.88.103:8080')
 
 function App() {
     const [count, setCount] = useState(0)

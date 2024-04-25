@@ -20,6 +20,6 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(5000, () => {
+server.listen(8080, '0.0.0.0', () => {
     console.log("Socket.io server running")
 })
