@@ -1,16 +1,31 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
+import io from 'socket.io-client'
+
+const socket = io('http://localhost:5000')
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [count, setCount] = useState(0)
 
-  return (
+    useEffect(() => {
+        socket.on('gameState', (data) => {
+            console.log(data)
+            setCount(data.counter)
+        })
+    })
+
+    const handleClick = () => {
+        socket.emit('increment', 1)
+    }
+
+
+    return (
     <>
       <div>
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
+        <button onClick={handleClick}>
           count is {count}
         </button>
         <p>
@@ -21,7 +36,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+    )
 }
 
 export default App
