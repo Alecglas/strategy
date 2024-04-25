@@ -2,7 +2,11 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import io from 'socket.io-client'
 
-const socket = io('http://136.34.88.103:8080')
+const socket = io('https://seasnail-prompt-ray.ngrok-free.app', {
+    extraHeaders: {
+        "ngrok-skip-browser-warning": 1
+    }
+})
 
 function App() {
     const [count, setCount] = useState(0)

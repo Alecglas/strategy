@@ -13,6 +13,7 @@ const io = new socketIo.Server(server, {
 let counter = 0
 
 io.on('connection', (socket) => {
+    console.log("connection established")
     socket.emit('gameState', { counter })
     socket.on('increment', (increment) => {
         counter = counter + increment
@@ -20,6 +21,6 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(8080, '0.0.0.0', () => {
+server.listen(8080, () => {
     console.log("Socket.io server running")
 })
