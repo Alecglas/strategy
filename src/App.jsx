@@ -2,21 +2,20 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import io from 'socket.io-client'
 
-const socket = io('https://seasnail-prompt-ray.ngrok-free.app', {
-    extraHeaders: {
-        "ngrok-skip-browser-warning": 1
-    }
-})
+const url = import.meta.env.DEV ? 'https://alecglascock.com:8443' : 'https://alecglascock.com:8443'
+
+const socket = io(url)
 
 function App() {
     const [count, setCount] = useState(0)
 
     useEffect(() => {
+        console.log(import.meta.env)
         socket.on('gameState', (data) => {
             console.log(data)
             setCount(data.counter)
         })
-    })
+    }, [])
 
     const handleClick = () => {
         socket.emit('increment', 1)
@@ -25,20 +24,11 @@ function App() {
 
     return (
     <>
-      <div>
-      </div>
-      <h1>Vite + React</h1>
       <div className="card">
         <button onClick={handleClick}>
           count is {count}
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
     )
 }
