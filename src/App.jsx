@@ -26,7 +26,7 @@ function App() {
     <>
       <div className="card">
         <button onClick={handleClick}>
-          count is {count}
+            {count}
         </button>
       </div>
     </>
