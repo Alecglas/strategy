@@ -20,5 +20,4 @@ jobs:
             git pull origin master
             npm install
             npm run build
-            cd src
-            pm2 restart server.cjs
+            pm2 restart server

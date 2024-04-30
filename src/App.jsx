@@ -13,7 +13,7 @@ function App() {
     const { user, updateUser } = useContext(UserContext);
 
     useEffect(() => {
-        let username = null//localStorage.getItem('username')
+        let username = localStorage.getItem('username')
         if(username !== null) {
             updateUser(username)
             socket.emit('setUsername', username)
