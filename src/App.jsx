@@ -1,35 +1,46 @@
-import { useEffect, useState } from 'react'
+import {useContext, useEffect, useState} from 'react'
 import './App.css'
-import io from 'socket.io-client'
-
-const url = import.meta.env.DEV ? 'localhost:8443' : 'https://alecglascock.com'
-
-const socket = io(url)
+import Login from './Login'
+import PageHeader from './PageHeader'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import PrivateRoute from "./PrivateRoute";
+import Game from "./Game";
+import socket from "./websocket";
+import UserContext from "./UserContext.jsx";
+import Chat from "./Chat.jsx";
 
 function App() {
-    const [count, setCount] = useState(0)
+    const { user, updateUser } = useContext(UserContext);
 
     useEffect(() => {
-        console.log(import.meta.env)
-        socket.on('gameState', (data) => {
-            console.log(data)
-            setCount(data.counter)
-        })
+        let username = null//localStorage.getItem('username')
+        if(username !== null) {
+            updateUser(username)
+            socket.emit('setUsername', username)
+        }
     }, [])
 
-    const handleClick = () => {
-        socket.emit('increment', 1)
-    }
-
+    socket.on('login', (username) => {
+        localStorage.setItem('username', username)
+        updateUser(username)
+    })
 
     return (
-    <>
-      <div className="card">
-        <button onClick={handleClick}>
-            {count}
-        </button>
-      </div>
-    </>
+            <Router>
+                <PageHeader/>
+                <Chat/>
+                <div className="App">
+                    <Routes>
+                        <Route path="/" exact element={<Login/>} />
+                        <Route path="/game" element={
+                                <PrivateRoute>
+                                    <Game/>
+                                </PrivateRoute>
+                            }
+                        />
+                    </Routes>
+                </div>
+            </Router>
     )
 }
 
