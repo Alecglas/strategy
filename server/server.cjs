@@ -40,6 +40,12 @@ io.on('connection', (socket) => {
         users.forEach(user => console.log(user.username))
     })
 
+    socket.on('sendMessage', ({ message }) => {
+        console.log(socket.username, ":", message)
+        socket.emit('newMessage', `${socket.username}:${message}`)
+        socket.broadcast.emit('newMessage', `${socket.username}:${message}`)
+    })
+
     socket.on('increment', (increment) => {
         counter = counter + increment
         io.emit('gameState', { counter })
