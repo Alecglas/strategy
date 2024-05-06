@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
@@ -11,14 +12,16 @@ const io = new socketIo.Server(server, {
     }
 });
 
+const savePath = path.join(__dirname, '..', 'saves', 'counter.json')
+
 let counter = 0
-fs.access('./saves/counter.json', fs.constants.R_OK, (err) => {
+fs.access(savePath, fs.constants.R_OK, (err) => {
     if (err) {
-        fs.appendFile('./saves/counter.json', JSON.stringify({ counter: 0 }, null, 2), (err) => {
+        fs.appendFile(savePath, JSON.stringify({ counter: 0 }, null, 2), (err) => {
 
         });
     } else {
-        counter = JSON.parse(fs.readFileSync('./saves/counter.json', 'utf-8')).counter
+        counter = JSON.parse(fs.readFileSync(savePath, 'utf-8')).counter
     }
 })
 
@@ -58,7 +61,7 @@ io.on('connection', (socket) => {
 });
 
 const handleServerShutdown = () => {
-    fs.writeFileSync('./saves/counter.json', JSON.stringify({ counter }, null, 2));
+    fs.writeFileSync(savePath, JSON.stringify({ counter }, null, 2));
     server.close()
 }
 
