@@ -2,7 +2,7 @@ import {useContext, useEffect, useState} from 'react'
 import './App.css'
 import Login from './Login'
 import PageHeader from './PageHeader'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 import PrivateRoute from "./PrivateRoute";
 import Game from "./Game";
 import socket from "./websocket";
@@ -16,11 +16,13 @@ function App() {
         let username = localStorage.getItem('username')
         if(username !== null) {
             updateUser(username)
-            socket.emit('setUsername', username)
+            socket.emit('changeName', username)
+        } else {
+            updateUser(null)
         }
     }, [])
 
-    socket.on('login', (username) => {
+    socket.on('name', (username) => {
         localStorage.setItem('username', username)
         updateUser(username)
     })
@@ -31,13 +33,14 @@ function App() {
                 <Chat/>
                 <div className="App">
                     <Routes>
-                        <Route path="/" exact element={<Login/>} />
+                        <Route path="/" exact element={<Game/>} />
                         <Route path="/game" element={
                                 <PrivateRoute>
                                     <Game/>
                                 </PrivateRoute>
                             }
                         />
+                        <Route path="*" element={<Navigate to="/"/>}/>
                     </Routes>
                 </div>
             </Router>

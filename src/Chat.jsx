@@ -1,11 +1,12 @@
 import {useContext, useEffect, useState} from 'react'
-import socket from './websocket.js'
 import UserContext from "./UserContext.jsx";
+import {useSocket} from "./useSocket.js";
 
 function Chat() {
     const { user } = useContext(UserContext);
     const [currentMessage, setCurrentMessage] = useState('');
     const [messages, setMessages] = useState([]);
+    const { socket, connected } = useSocket();
 
     useEffect(() => {
         socket.on('newMessage', (message) => {
@@ -16,6 +17,8 @@ function Chat() {
                 messages.shift()
             }
         })
+
+
     }, [])
 
     const handleKeyDown = (e) => {
@@ -26,7 +29,7 @@ function Chat() {
         }
     }
 
-    return (
+    return connected && user && (
         <div className="chatBox">
             <label className="messageBox">
                 <textarea onKeyDown={handleKeyDown} className="messageBox" type="text" name="username"
