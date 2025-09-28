@@ -15,7 +15,6 @@ function PageHeader() {
     }
 
     const handleLogout = (e) => {
-        navigate('/')
         close();
     };
 
@@ -35,73 +34,75 @@ function PageHeader() {
     }
 
     const renderUsername = () => {
+        console.log("USER", user)
         if(editName) {
             return (
                 <form
                     onSubmit={handleNameChange}
                 >
-                    <div className="username">
-                        <input/>
+                    <div className="mr-2 font-bold text-white bg-gray-600">
+                        <input autoFocus className="w-30" />
                     </div>
                 </form>
             )
         } else {
             return (
-                <div className="username">
-                    {user}
-                </div>
+                <span className="mr-2 font-bold text-white">{user}</span>
             )
         }
     }
 
     return (
-        <>
-            <div className="header">
-                <div className="header-left"></div>
-                <div className="header-center">
-                    <button onClick={handleClick}>
-                        {counter}
-                    </button>
-                </div>
-                <div className="header-right">
-                    {renderUsername()}
-                    <button
-                        onClick={() => setOpen(!open)}
-                        className="settings"
-                    >
-                        ⚙️
-                    </button>
+        <div className="fixed top-0 left-0 right-0 h-16 bg-gray-800 flex items-center justify-between px-4 z-50">
+            <div/>
 
-                    {open && (
-                        <div className="dropdown">
-                            { user && (
-                                <button
-                                    className="dropdown-item"
-                                    onClick={() => setEditName(!editName)}
-                                >
-                                    Change Name
-                                </button>
-                            )}
-                            { user && (
-                            <button
-                                className="dropdown-item"
-                                style={{color: "red"}}
+            <div className="absolute left-1/2 transform -translate-x-1/2 font-bold text-white">
+                <button onClick={handleClick}>{counter}</button>
+            </div>
+
+            <div className="flex items-center relative">
+                {renderUsername()}
+                <div
+                    onClick={() => setOpen(!open)}
+                    className="cursor-pointer"
+                >
+                    ⚙️
+                </div>
+
+                {open && (
+                    <div
+                        className="absolute top-full right-0 mt-2 bg-gray-700 rounded shadow-lg overflow-hidden z-50 min-w-[150px] cursor-pointer">
+                        {user && (
+                            <div
+                                className="w-full text-left px-4 py-2 text-white hover:bg-gray-600"
+                                onClick={() => {
+                                    setEditName(!editName)
+                                    setOpen(false)
+                                    focus()
+                                }}
+                            >
+                                Change Name
+                            </div>
+                        )}
+                        {user && (
+                            <div
+                                className="w-full text-left px-4 py-2 text-red-500 hover:bg-gray-600"
                                 onClick={handleLogout}
                             >
                                 Log Out
-                            </button>
-                            )}
-                            <button
-                                className="dropdown-item"
-                                onClick={close}
-                            >
-                                Close
-                            </button>
+                            </div>
+                        )}
+                        <div
+                            className="w-full text-left px-4 py-2 text-white hover:bg-gray-600"
+                            onClick={close}
+                        >
+                            Close
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
-        </>
+        </div>
+
     )
 }
 
