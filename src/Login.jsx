@@ -12,12 +12,14 @@ function Login() {
     const [username, setUsername] = useState('')
 
     if (user) {
+        socket.connect();
         return <Navigate to="/game" />
     }
 
     const handleLogin = () => {
-        socket.emit('setUsername',  username)
-        socket.on('login', (username) => {
+        socket.connect();
+        socket.emit('changeName',  username)
+        socket.on('name', (username) => {
             navigate('/game')
         })
     }
